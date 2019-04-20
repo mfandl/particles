@@ -1,4 +1,5 @@
-#githubuser particles
+# particles
+
 a small particle system
 
 # usage
