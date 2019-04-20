@@ -32,7 +32,7 @@ updateFunc _ dt = map updatePosition . integrateForces dt
     updatePosition (Particle (pos, vel)) = Particle (pos + vel ^* dt, vel)
 
 count :: Int
-count = 250
+count = 200
 
 main :: IO ()
 main = do

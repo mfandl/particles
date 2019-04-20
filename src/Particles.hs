@@ -28,6 +28,3 @@ integrateForces dt ps = (fn <$> ps)
       vel + (foldl' (\a b -> a + dt *^ (force pos b)) zero positions))
     
     positions = (fst . getParticle) <$> ps
-
-testParticles :: String
-testParticles = "particles work"
