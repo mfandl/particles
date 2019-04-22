@@ -1,14 +1,11 @@
 module Particles where
 
 import Linear
-import Data.Foldable (foldl')
 
-type Position = V2 Float
-type Velocity = V2 Float
-type Acceleration = V2 Float
+import Types
 
-newtype Particle = Particle { getParticle :: (Position, Velocity) }
-  deriving (Eq, Show)
+import Data.Foldable (foldl', foldMap)
+
 
 force :: Position -> Position -> Acceleration
 force pa pb = case compare pa pb of
@@ -28,3 +25,4 @@ integrateForces dt ps = (fn <$> ps)
       vel + (foldl' (\a b -> a + dt *^ (force pos b)) zero positions))
     
     positions = (fst . getParticle) <$> ps
+

@@ -5,6 +5,7 @@ import Graphics.Gloss.Data.ViewPort
 import System.Random
 import Linear
 
+import Types
 import Particles
 
 type World = [Particle]
