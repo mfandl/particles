@@ -6,9 +6,14 @@ import System.Random
 import Linear
 
 import Types
-import Particles
+import qualified Particles as P1
 
-type World = [Particle]
+import qualified Particles2 as P2
+
+import qualified Data.Sequence as S (Seq, empty, (<|), fromList)
+import Data.Foldable (toList)
+
+type World = S.Seq Particle
 
 displayMode = InWindow "Window" (400, 400) (0, 0)
 
@@ -23,26 +28,26 @@ shape :: Picture
 shape = Circle 2
 
 drawFunc :: World -> Picture
-drawFunc = pictures . map drawParticle
+drawFunc = pictures . toList . fmap drawParticle
   where
     drawParticle (Particle ((V2 x y), _)) = translate x y shape
 
 updateFunc :: ViewPort -> Float -> World -> World
-updateFunc _ dt = map updatePosition . integrateForces dt
+updateFunc _ dt = fmap updatePosition . P2.mkIntegrateForces(2) dt
   where
     updatePosition (Particle (pos, vel)) = Particle (pos + vel ^* dt, vel)
 
 count :: Int
-count = 200
+count = 70
 
 main :: IO ()
 main = do
   g <- getStdGen
   let rnds = take (4 * count) $ (randoms g :: [Float])
-  simulate displayMode white 60 (initialWorld rnds) drawFunc updateFunc
+  simulate displayMode white 60 duetWorld drawFunc updateFunc
     where
-      initialWorld [] = []
-      initialWorld (x:y:vx:vy:rs) = Particle ((V2 (-200 + 400 * x) (-200 + 400 * y)), (V2 vx vy)) : (initialWorld rs)
-      duetWorld = [Particle ((V2 0 0), (V2 0 0)), Particle ((V2 10 0), (V2 0 10))]
+      initialWorld [] = S.empty
+      initialWorld (x:y:vx:vy:rs) = Particle ((V2 (-200 + 400 * x) (-200 + 400 * y)), (V2 vx vy)) S.<| (initialWorld rs)
+      duetWorld = S.fromList [Particle ((V2 0 0), (V2 0 0)), Particle ((V2 10 0), (V2 0 10))]
 
   
