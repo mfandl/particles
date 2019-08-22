@@ -10,7 +10,7 @@ import Data.Foldable (foldl', foldMap)
 force :: Position -> Position -> Acceleration
 force pa pb = case compare pa pb of
   EQ        -> zero -- to prevent division by zero
-  otherwise -> 100 * (1 / dist) *^ nrm
+  otherwise -> (1 / dist) *^ nrm
   where
     dist = distance pa pb
     nrm = normalize $ pb - pa
@@ -22,7 +22,7 @@ integrateForces dt ps = (fn <$> ps)
     fn (Particle (pos, vel)) =
       Particle (
       pos,
-      vel + (foldl' (\a b -> a + dt *^ (force pos b)) zero positions))
+      vel + (foldl' (\a b -> a + dt *^ (100 * (force pos b))) zero positions))
     
     positions = (fst . getParticle) <$> ps
 
